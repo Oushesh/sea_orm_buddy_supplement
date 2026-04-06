@@ -1,0 +1,8 @@
+[package]
+name = "sea_orm_buddy_supplement"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+sea-orm = { version = "1", features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros"] }
+tokio = { version = "1", features = ["full"] }
