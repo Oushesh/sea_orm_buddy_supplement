@@ -1,50 +1,60 @@
+mod user;
+mod supplement;
+
 use sea_orm::{
     ActiveModelTrait, ActiveValue::Set, ConnectionTrait,
     Database, EntityTrait, Schema
 };
 
-mod user;
-use user::Entity as User; // This is the 'Gateway' mentioned before
+
+// Aliasing for cleaner
+use user::Entity as User;
+use supplement::Entity as Supplement;
 
 #[tokio::main]
-async fn main() {
-    // 1. Connect
-    let db = Database::connect("sqlite::memory:").await.unwrap();
+async fn main() -> Result<(),sea_orm::DbErr> {
+    //1. One connection to rule them all
+    //let db = Database::connect("sqlite::memory:").await?;
 
-    // 2. Setup Schema (This builds the 'users' table)
+    // This creates a file in your project folder called "local.db"
+    let db = Database::connect("sqlite:local.db?mode=rwc").await?;
+    //2. Initialize both tables
     let builder = db.get_database_backend();
-    let schema = Schema::new(builder);
-    let create_table_stmt = schema.create_table_from_entity(User);
+    let _schema = Schema::new(builder); //schema
 
-    // Now that ConnectionTrait is imported, execute() will work
-    db.execute(builder.build(&create_table_stmt))
-        .await
-        .unwrap();
+    //Actually execute the creation commands
+    let create_user_stmt = builder.build(&_schema.create_table_from_entity(User));
+    db.execute(create_user_stmt).await?;
 
-    println!("Database initialized and table created.");
+    let create_supp_stmt = builder.build(&_schema.create_table_from_entity(Supplement));
+    db.execute(create_supp_stmt).await?;
+    println!("Tables  'users' and 'supplement' created.");
 
-    // 3. Define User 1
-    let user1 = user::ActiveModel {
+    //3. Manipulate Users
+    let alice = user::ActiveModel {
         name: Set("Alice".to_owned()),
         ..Default::default()
     };
-    let user1_result = user1.insert(&db).await.unwrap();
-    println!("Inserted User 1: {:?}", user1_result);
+    alice.insert(&db).await?;
 
-    // 4. Define and Insert User 2
-    let user2 = user::ActiveModel {
-        name: Set("Bob".to_owned()),
+    //4. Manipulate Supplements
+    let vit_c = supplement::ActiveModel {
+        name: Set("Vitamin C".to_owned()),
+        dose: Set("1000mg".to_owned()),
         ..Default::default()
     };
+    vit_c.insert(&db).await?;
 
-    // Note: fixed the 'await' typo to 'await' here
-    user2.insert(&db).await.unwrap();
+    // 5. Query both to prove the exist independently
+    let user_count = User::find().all(&db).await?.len();
+    let supplement_count = Supplement::find().all(&db).await?.len();
 
-    // 5. Query all data from the databank.
-    let all_users = User::find().all(&db).await.unwrap();
+    println!("Database contains {} users and {} supplements.",user_count,supplement_count);
 
-    println!("--- All Users in Database ---");
-    for u in all_users {
-        println!("ID: {}, Name: {}", u.id, u.name);
-    }
+    Ok(())
 }
+
+
+//#todo: assume both share the same db connection otherwise we need 2 objects.
+
+//#todo: Migrations next.
