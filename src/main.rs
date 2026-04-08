@@ -36,10 +36,11 @@ async fn main() {
         name: Set("Bob".to_owned()),
         ..Default::default()
     };
-    // Note: fixed the 'awat' typo to 'await' here
+
+    // Note: fixed the 'await' typo to 'await' here
     user2.insert(&db).await.unwrap();
 
-    // 5. Query all
+    // 5. Query all data from the databank.
     let all_users = User::find().all(&db).await.unwrap();
 
     println!("--- All Users in Database ---");
