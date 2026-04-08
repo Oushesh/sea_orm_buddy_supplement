@@ -1,4 +1,5 @@
 mod supplement;
+mod user;
 
 use sea_orm::{
     ActiveModelTrait, ActiveValue::Set, ConnectionTrait, Database, DatabaseConnection, DbErr,
