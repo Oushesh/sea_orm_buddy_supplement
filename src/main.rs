@@ -1,72 +1,49 @@
-mod supplement;
-mod user;
-
 use sea_orm::{
-    ActiveModelTrait, ActiveValue::Set, ConnectionTrait, Database, DatabaseConnection, DbErr,
-    EntityTrait, Schema,
+    ActiveModelTrait, ActiveValue::Set, ConnectionTrait,
+    Database, EntityTrait, Schema
 };
-use supplement::Entity as SupplementEntity;
 
-/// Create the `supplement` table if it does not already exist.
-async fn create_table(db: &DatabaseConnection) -> Result<(), DbErr> {
-    let backend = db.get_database_backend();
-    let schema = Schema::new(backend);
-    let stmt = schema.create_table_from_entity(SupplementEntity);
-    db.execute(backend.build(&stmt)).await?;
-    Ok(())
-}
-
-/// Insert a new supplement record and return the saved model.
-async fn add_supplement(
-    db: &DatabaseConnection,
-    name: impl Into<String>,
-    dose: impl Into<String>,
-    description: Option<String>,
-) -> Result<supplement::Model, DbErr> {
-    let new_supplement = supplement::ActiveModel {
-        name: Set(name.into()),
-        dose: Set(dose.into()),
-        description: Set(description),
-        ..Default::default()
-    };
-    let result = new_supplement.insert(db).await?;
-    Ok(result)
-}
-
-/// Delete a supplement record by its primary key.
-async fn delete_supplement(db: &DatabaseConnection, id: i32) -> Result<(), DbErr> {
-    SupplementEntity::delete_by_id(id).exec(db).await?;
-    Ok(())
-}
+mod user;
+use user::Entity as User; // This is the 'Gateway' mentioned before
 
 #[tokio::main]
-async fn main() -> Result<(), DbErr> {
-    // Connect to an in-memory SQLite database.
-    let db = Database::connect("sqlite::memory:").await?;
+async fn main() {
+    // 1. Connect
+    let db = Database::connect("sqlite::memory:").await.unwrap();
 
-    // Set up the schema.
-    create_table(&db).await?;
+    // 2. Setup Schema (This builds the 'users' table)
+    let builder = db.get_database_backend();
+    let schema = Schema::new(builder);
+    let create_table_stmt = schema.create_table_from_entity(User);
 
-    // Add a couple of supplements.
-    let vitamin_c = add_supplement(
-        &db,
-        "Vitamin C",
-        "1000mg",
-        Some("Immune support antioxidant".to_string()),
-    )
-    .await?;
-    println!("Added: {:?}", vitamin_c);
+    // Now that ConnectionTrait is imported, execute() will work
+    db.execute(builder.build(&create_table_stmt))
+        .await
+        .unwrap();
 
-    let magnesium = add_supplement(&db, "Magnesium", "400mg", None).await?;
-    println!("Added: {:?}", magnesium);
+    println!("Database initialized and table created.");
 
-    // Delete the first one.
-    delete_supplement(&db, vitamin_c.id).await?;
-    println!("Deleted supplement with id={}", vitamin_c.id);
+    // 3. Define User 1
+    let user1 = user::ActiveModel {
+        name: Set("Alice".to_owned()),
+        ..Default::default()
+    };
+    let user1_result = user1.insert(&db).await.unwrap();
+    println!("Inserted User 1: {:?}", user1_result);
 
-    // Confirm what remains.
-    let remaining = SupplementEntity::find().all(&db).await?;
-    println!("Remaining supplements: {:?}", remaining);
+    // 4. Define and Insert User 2
+    let user2 = user::ActiveModel {
+        name: Set("Bob".to_owned()),
+        ..Default::default()
+    };
+    // Note: fixed the 'awat' typo to 'await' here
+    user2.insert(&db).await.unwrap();
 
-    Ok(())
+    // 5. Query all
+    let all_users = User::find().all(&db).await.unwrap();
+
+    println!("--- All Users in Database ---");
+    for u in all_users {
+        println!("ID: {}, Name: {}", u.id, u.name);
+    }
 }
