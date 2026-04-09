@@ -1,43 +1,33 @@
-mod user;
+mod migration;
 mod supplement;
+mod user;
 
-use sea_orm::{
-    ActiveModelTrait, ActiveValue::Set, ConnectionTrait,
-    Database, EntityTrait, Schema
-};
+use migration::{Migrator, MigratorTrait};
+use sea_orm::{ActiveModelTrait, ActiveValue::Set, Database, EntityTrait};
 
-
-// Aliasing for cleaner
-use user::Entity as User;
+// Aliasing for cleaner code
 use supplement::Entity as Supplement;
+use user::Entity as User;
 
 #[tokio::main]
-async fn main() -> Result<(),sea_orm::DbErr> {
-    //1. One connection to rule them all
-    //let db = Database::connect("sqlite::memory:").await?;
-
-    // This creates a file in your project folder called "local.db"
+async fn main() -> Result<(), sea_orm::DbErr> {
+    // 1. Connect – uses a persistent file-based SQLite database.
     let db = Database::connect("sqlite:local.db?mode=rwc").await?;
-    //2. Initialize both tables
-    let builder = db.get_database_backend();
-    let _schema = Schema::new(builder); //schema
 
-    //Actually execute the creation commands
-    let create_user_stmt = builder.build(&_schema.create_table_from_entity(User));
-    db.execute(create_user_stmt).await?;
+    // 2. Run all pending migrations (idempotent: safe to call on every start).
+    //    SeaORM records applied migrations in the `seaql_migrations` table so
+    //    each migration is only ever executed once.
+    Migrator::up(&db, None).await?;
+    println!("Migrations applied successfully.");
 
-    let create_supp_stmt = builder.build(&_schema.create_table_from_entity(Supplement));
-    db.execute(create_supp_stmt).await?;
-    println!("Tables  'users' and 'supplement' created.");
-
-    //3. Manipulate Users
+    // 3. Insert a user.
     let alice = user::ActiveModel {
         name: Set("Alice".to_owned()),
         ..Default::default()
     };
     alice.insert(&db).await?;
 
-    //4. Manipulate Supplements
+    // 4. Insert a supplement.
     let vit_c = supplement::ActiveModel {
         name: Set("Vitamin C".to_owned()),
         dose: Set("1000mg".to_owned()),
@@ -45,16 +35,13 @@ async fn main() -> Result<(),sea_orm::DbErr> {
     };
     vit_c.insert(&db).await?;
 
-    // 5. Query both to prove the exist independently
+    // 5. Query both tables to confirm the rows exist independently.
     let user_count = User::find().all(&db).await?.len();
     let supplement_count = Supplement::find().all(&db).await?.len();
-
-    println!("Database contains {} users and {} supplements.",user_count,supplement_count);
+    println!(
+        "Database contains {} user(s) and {} supplement(s).",
+        user_count, supplement_count
+    );
 
     Ok(())
 }
-
-
-//#todo: assume both share the same db connection otherwise we need 2 objects.
-
-//#todo: Migrations next.
