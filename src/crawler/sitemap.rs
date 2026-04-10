@@ -1,1 +1,3 @@
-pub fn parse_sitemap() { println!("Crawling..."); }
+pub fn parse_sitemap()
+    { println!("Crawling...");
+    }
