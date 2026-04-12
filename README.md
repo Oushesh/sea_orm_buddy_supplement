@@ -65,6 +65,23 @@ https://github.com/firecrawl/firecrawl/tree/main/apps/api/src/scraper/scrapeURL
     2. src/cleaner.rs --> Uses ammonia to strip junk
     3. src/converter.s --> after cleaning the junk we convert the cleaned/processed html tags to md file
 
+## Folder Structure:
+   We have 3 Apps in the main folder structure.
+   App 1: Supplement
+   App 2: user
+   App 3: under folder source
+
+    sea_orm_buddy_supplement/  <-- Root Folder
+    ├── Cargo.toml             <-- Workspace Definition
+    ├── supplement/            <-- Your App
+    │   ├── Cargo.toml
+    │   └── src/
+    │       └── main.rs
+    └── user/                  <-- Your other App
+    ├── Cargo.toml
+    └── src/
+    └── main.rs
+
 
 ## Tip afterwards:
    If you look at the Firecrawl source, they often use "Base64 Image Handling",
