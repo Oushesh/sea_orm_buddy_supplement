@@ -2561,6 +2561,11 @@ dependencies = [
 [[package]]
 name = "user"
 version = "0.1.0"
+dependencies = [
+ "sea-orm",
+ "sea-orm-migration",
+ "tokio",
+]
 
 [[package]]
 name = "utf8_iter"
