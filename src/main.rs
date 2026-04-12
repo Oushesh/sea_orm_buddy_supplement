@@ -5,7 +5,7 @@ mod fetcher;
 mod crawler;
 mod converter;
 
-use fetcher::sitemap::fetch_html;
+use fetcher::sitemap::{fetch_html,fetch_with_browser,fetch_stealth};
 use crawler::sitemap::parse_sitemap;
 use converter::sitemap::converter;
 
@@ -15,8 +15,8 @@ async fn main () {
     //let url = "https://www.olvlimits.com";
     //let url = "https://news.ycombinator.com";
     let url = "https://www.zillow.com/";
-    fetch_html(url).await.unwrap();
-
+    //fetch_html(url).await.unwrap();
+    fetch_stealth(url).await.unwrap();
     println!("📡 Fetching HTML from {}...", url);
 
 

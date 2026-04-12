@@ -8,6 +8,8 @@ sea-orm = { version = "1", features = ["sqlx-sqlite", "runtime-tokio-rustls", "m
 sea-orm-migration = { version = "1", features = ["sqlx-sqlite", "runtime-tokio-rustls"] }
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.13.2"
+headless_chrome = "1.0.21"
+
 
 [workspace]
 members = [
