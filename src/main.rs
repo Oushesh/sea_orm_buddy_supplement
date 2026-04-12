@@ -5,13 +5,34 @@ mod fetcher;
 mod crawler;
 mod converter;
 
-use fetcher::sitemap::start_fetch;
+use fetcher::sitemap::fetch_html;
 use crawler::sitemap::parse_sitemap;
 use converter::sitemap::converter;
 
-fn main () {
+#[tokio::main]
+async fn main () {
     //1. Cal the function using the module
-    start_fetch("https://www.olvlimits.com");
+    let url = "https://www.olvlimits.com";
+    fetch_html(url).await.unwrap();
+
+    println!("📡 Fetching HTML from {}...", url);
+
+
+    // Now .await is allowed!
+    match fetch_html(url).await {
+        Ok(html) => {
+            println!("✅ Success! Total length: {} characters", html.len());
+
+        //Let's see the first 200 chars to sure
+        let preview = &html[0..200.min(html.len())];
+        println!("--- Preview ---\n{}\n---------------", preview);
+        }
+
+        Err(e) => {
+            eprintln!("Error: {}", e);
+        }
+    }
+
 
     //2. Call the function using the folder module
     parse_sitemap();
@@ -25,3 +46,6 @@ fn main () {
 //Finish building this crawler in Rust.
 
 //TODO: <architecture of files import>
+
+
+//TODO:

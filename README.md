@@ -82,7 +82,6 @@ https://github.com/firecrawl/firecrawl/tree/main/apps/api/src/scraper/scrapeURL
     └── src/
     └── main.rs
 
-
 ## Tip afterwards:
    If you look at the Firecrawl source, they often use "Base64 Image Handling",
    When scraping for lLMs, you usually want to strip images or convert them to 
@@ -90,8 +89,4 @@ https://github.com/firecrawl/firecrawl/tree/main/apps/api/src/scraper/scrapeURL
    to strip_images(true) will immediately make your tool
    more "AI-native" more than 90% of other scrapers.
 
-   
-   
-   
-
-    
+## 
