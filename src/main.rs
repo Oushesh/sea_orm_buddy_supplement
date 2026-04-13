@@ -5,9 +5,14 @@ mod fetcher;
 mod crawler;
 mod converter;
 
-use fetcher::sitemap::{fetch_html,fetch_with_browser,fetch_stealth};
+use fetcher::sitemap::{fetch_html,fetch_with_browser,fetch_stealth_simplified};
 use crawler::sitemap::parse_sitemap;
-use converter::sitemap::converter;
+use converter::sitemap::to_markdown;
+
+use rand::seq::SliceRandom;
+use rand::Rng;
+
+// Add rand to Cargo.toml
 
 #[tokio::main]
 async fn main () {
@@ -16,29 +21,80 @@ async fn main () {
     //let url = "https://news.ycombinator.com";
     let url = "https://www.zillow.com/";
     //fetch_html(url).await.unwrap();
-    fetch_stealth(url).await.unwrap();
-    println!("📡 Fetching HTML from {}...", url);
 
-
-    // Now .await is allowed!
-    match fetch_html(url).await {
+    match fetch_stealth_simplified(url).await {
         Ok(html) => {
-            println!("✅ Success! Total length: {} characters", html.len());
+            println!("✅ HTML Retrieved! Length: {} characters", html.len());
 
-        //Let's see the first 200 chars to sure
-        let preview = &html[0..200.min(html.len())];
-        println!("--- Preview ---\n{}\n---------------", preview);
-        }
+            // 2. Pass the HTML to your Refinery
+            let markdown = to_markdown(&html);
 
+            println!("--- REFINED MARKDOWN PREVIEW ---");
+            // Print the first 500 characters so we don't flood the terminal
+            println!("{}", &markdown[..std::cmp::min(markdown.len(), 500)]);
+            println!("\n--- END PREVIEW ---");
+        },
         Err(e) => {
-            eprintln!("Error: {}", e);
+            eprintln!("❌ The Stealth Mission Failed: {}", e);
         }
     }
+    // A pool of potential proxy gateways
+    /*
+    let mut proxy_pool = vec![
+        "http://proxy-us.example.com:8001",
+        "http://proxy-eu.example.com:8001",
+        "http://proxy-mobile.example.com:8001",
+    ];
+
+    let max_retries = 3;
+    let mut attempt = 0;
+    let mut success = false;
+
+
+    while attempt < max_retries && !success {
+        // 1. Pick a proxy
+        let current_proxy = proxy_pool.choose(&mut rand::thread_rng()).unwrap();
+
+        println!("🔄 Attempt {}/{} using proxy: {}", attempt + 1, max_retries, current_proxy);
+
+        // 2. Try the fetch (Pass the proxy to your fetcher)
+        match fetch_with_proxy(url, current_proxy).await {
+            Ok(html) => {
+                // Check if it's the REAL content or a Captcha
+                if html.contains("px-captcha") {
+                    println!("⚠️ Hit a Captcha! Rotating proxy...");
+                } else {
+                    let markdown = to_markdown(&html);
+                    println!("✅ Success! Data extracted.");
+                    success = true;
+                    // Save or process your markdown here
+                }
+            }
+            Err(e) => {
+                eprintln!("❌ Network Error: {}. Trying next proxy...", e);
+            }
+        }
+
+        attempt += 1;
+
+        // Exponential backoff: Wait a bit longer each time to look "human"
+        if !success {
+            let wait_time = std::time::Duration::from_secs(attempt * 2);
+            tokio::time::sleep(wait_time).await;
+        }
+    }
+
+    if !success {
+        println!("🛑 All retries failed. The site is winning today.");
+    }
+    */
+
+
+
     //2. Call the function using the folder module
     parse_sitemap();
 
-    //3. Call the function using
-    converter();
+    //3. TODO: option is call the converter here.
 }
 
 //Architecture and Design in Rust.

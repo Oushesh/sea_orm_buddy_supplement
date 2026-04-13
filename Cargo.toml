@@ -9,6 +9,11 @@ sea-orm-migration = { version = "1", features = ["sqlx-sqlite", "runtime-tokio-r
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.13.2"
 headless_chrome = "1.0.21"
+rand = "0.8"
+ammonia = "4.0"
+html2md = "0.2"
+serde = { version = "1.0.228", features = ["derive"] }
+spider = { version = "1.99.37", features = ["chrome", "chrome_stealth", "ua_generator", "real_browser"] }
 
 
 [workspace]
