@@ -8,6 +8,7 @@ mod converter;
 use fetcher::sitemap::{fetch_html,fetch_with_browser,fetch_stealth};
 use crawler::sitemap::parse_sitemap;
 use converter::sitemap::converter;
+use oxymouse_rs::algorithms::bezier::BezierMouse;
 
 #[tokio::main]
 async fn main () {
@@ -39,6 +40,15 @@ async fn main () {
 
     //3. Call the function using
     converter();
+
+    //4. Demo: generate Bézier mouse-movement coordinates via oxymouse_rs
+    let movements = BezierMouse::generate_coordinates(0, 0, 1920, 1080);
+    println!(
+        "🖱️  BezierMouse: {} steps from (0,0) to (1920,1080). First={:?}, Last={:?}",
+        movements.len(),
+        movements.first().unwrap(),
+        movements.last().unwrap(),
+    );
 }
 
 //Architecture and Design in Rust.
