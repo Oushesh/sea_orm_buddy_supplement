@@ -89,4 +89,24 @@ https://github.com/firecrawl/firecrawl/tree/main/apps/api/src/scraper/scrapeURL
    to strip_images(true) will immediately make your tool
    more "AI-native" more than 90% of other scrapers.
 
-## 
+## Github: Translate the Github.com/oxylabs --> oxyMouse 
+
+   Github.com/
+
+   https://www.youtube.com/watch?v=9cQBNYsCqQs
+
+   ProxyLabs --> Mouse Movements --> 
+
+   Test oxylabs and Python and Rust
+
+
+   "In 2018, Facebook admitted they track mouse movements to the US Senate Committee"
+
+   "Do websites track mouse movements? --> Behavior Signals are clicks, touch events," 
+
+
+   "Mouse Movement Algorithms using 3 Mathematical " 
+
+   "Test Proxies for IP Detection"
+
+   ""

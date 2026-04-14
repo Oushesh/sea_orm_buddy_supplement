@@ -17,7 +17,7 @@ spider = { version = "1.99.37", features = ["chrome", "chrome_stealth", "ua_gene
 
 
 [workspace]
-members = [
+members = ["oxymouse_rs","oxymousealg",
     "supplement",
     "user"]
 
