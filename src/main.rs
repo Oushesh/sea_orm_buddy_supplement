@@ -43,12 +43,14 @@ async fn main () {
 
     //4. Demo: generate Bézier mouse-movement coordinates via oxymouse_rs
     let movements = BezierMouse::generate_coordinates(0, 0, 1920, 1080);
-    println!(
-        "🖱️  BezierMouse: {} steps from (0,0) to (1920,1080). First={:?}, Last={:?}",
-        movements.len(),
-        movements.first().unwrap(),
-        movements.last().unwrap(),
-    );
+    if let (Some(first), Some(last)) = (movements.first(), movements.last()) {
+        println!(
+            "🖱️  BezierMouse: {} steps from (0,0) to (1920,1080). First={:?}, Last={:?}",
+            movements.len(),
+            first,
+            last,
+        );
+    }
 }
 
 //Architecture and Design in Rust.
