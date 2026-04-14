@@ -63,13 +63,14 @@ async fn main () {
 //Competitor Analysis:
 //<TheLLM-Ready Output>
 
+
 /*
 """
 The LLM-Ready Output (The Main Advantage)
 Markdown vs. HTML: Most scrapers return raw HTML, which
 is bloated with <scripts> and <div> tags.
 
-Token Efficiency: Because Markdownw is much shorter than HTML,
+Token Efficiency: Because Markdown is much shorter than HTML,
 it uses roughly 60-70 % fewer tokens, making it significantly chaper
 and faster to feed into models like GPT-4o or Claude.
 
@@ -100,3 +101,7 @@ Firecrawl handles all of this natively. You send a URL to their API, and they re
 era that older tools lack:The /map Endpoint: Instantly discover all URLs on a website without having to manually parse a sitemap. This allows an agent to "know" the structure of a site in seconds.The /scrape Actions: You can tell Firecrawl to "click the button," "scroll down," or "wait for X to appear" before extracting, which is essential for modern Javascript-heavy apps (React/Next.js).Natural Language Navigation: Their newer "Agent" features allow you to say, "Find the pricing page and extract the pro tier features," rather than providing a specific URL or CSS selector.
 """
 */
+
+/*
+TODO: <Add also a graph to export the images.>
+ */
