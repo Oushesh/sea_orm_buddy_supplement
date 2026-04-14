@@ -1682,6 +1682,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "oxymouse_rs"
+version = "0.1.0"
+dependencies = [
+ "rand 0.8.5",
+]
+
+[[package]]
 name = "parking"
 version = "2.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2491,6 +2498,7 @@ name = "sea_orm_buddy_supplement"
 version = "0.1.0"
 dependencies = [
  "headless_chrome",
+ "oxymouse_rs",
  "reqwest",
  "sea-orm",
  "sea-orm-migration",

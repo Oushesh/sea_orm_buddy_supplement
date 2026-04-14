@@ -9,10 +9,11 @@ sea-orm-migration = { version = "1", features = ["sqlx-sqlite", "runtime-tokio-r
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.13.2"
 headless_chrome = "1.0.21"
+oxymouse_rs = { path = "oxymouse_rs" }
 
 
 [workspace]
-members = [
+members = ["oxymouse_rs",
     "supplement",
     "user"]
 
