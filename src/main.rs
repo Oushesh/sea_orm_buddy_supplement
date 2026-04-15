@@ -4,11 +4,17 @@
 mod fetcher;
 mod crawler;
 mod converter;
+mod plotter;
+mod utils;
 
-use fetcher::sitemap::{fetch_html,fetch_with_browser,fetch_stealth};
+use fetcher::sitemap::{fetch_html, fetch_stealth};
 use crawler::sitemap::parse_sitemap;
 use converter::sitemap::converter;
 use oxymouse_rs::algorithms::bezier::BezierMouse;
+
+use utils::get_output_path;
+
+
 
 #[tokio::main]
 async fn main () {
@@ -51,13 +57,19 @@ async fn main () {
             last,
         );
     }
+    println!("{:#?}", movements);
+
+    //Call the visualiser function here.
+    let output_path = get_output_path("output.png");
+    let _ = plotter::visualize_movements(&*movements, &output_path);
+
 }
 
 //Architecture and Design in Rust.
-
 //Finish building this crawler in Rust.
 
 //TODO: <architecture of files import>
+
 
 //TODO: Economics of this Idea:
 //Competitor Analysis:
@@ -95,7 +107,6 @@ Firecrawl handles all of this natively. You send a URL to their API, and they re
 
 """
 
-
 """
 3. 3. Purpose-Built for AI AgentsFirecrawl includes features specifically designed for the AI Agent \
 era that older tools lack:The /map Endpoint: Instantly discover all URLs on a website without having to manually parse a sitemap. This allows an agent to "know" the structure of a site in seconds.The /scrape Actions: You can tell Firecrawl to "click the button," "scroll down," or "wait for X to appear" before extracting, which is essential for modern Javascript-heavy apps (React/Next.js).Natural Language Navigation: Their newer "Agent" features allow you to say, "Find the pricing page and extract the pro tier features," rather than providing a specific URL or CSS selector.
@@ -103,5 +114,6 @@ era that older tools lack:The /map Endpoint: Instantly discover all URLs on a we
 */
 
 /*
-TODO: <Add also a graph to export the images.>
+TODO: <Add also a function to export the images.>
+
  */
