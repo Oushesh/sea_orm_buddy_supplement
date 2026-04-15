@@ -42,6 +42,5 @@ async fn main() -> Result<(), sea_orm::DbErr> {
         "Database contains {} user(s) and {} supplement(s).",
         user_count, supplement_count
     );
-
     Ok(())
 }
