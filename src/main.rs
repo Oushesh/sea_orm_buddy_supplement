@@ -8,7 +8,7 @@ mod converter;
 use fetcher::sitemap::{fetch_html,fetch_with_browser,fetch_stealth};
 use crawler::sitemap::parse_sitemap;
 use converter::sitemap::converter;
-use oxymouse_rs::algorithms::bezier::BezierMouse;
+use oxymouse_rs::algorithms::bezier_old::BezierMouse;
 
 #[tokio::main]
 async fn main () {
@@ -51,6 +51,7 @@ async fn main () {
             last,
         );
     }
+    
 }
 
 //Architecture and Design in Rust.
