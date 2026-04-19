@@ -89,7 +89,7 @@ impl GaussianMouse {
             .collect()
     }
 
-    fn bezier_curve(p0: f64, p1: f64, p2: f64, t: f64) -> f64 {
+    pub fn bezier_curve(p0: f64, p1: f64, p2: f64, t: f64) -> f64 {
         (1.0 - t).powi(2) * p0 + 2.0 * (1.0 - t) * t * p1 + t.powi(2) * p2
     }
 
