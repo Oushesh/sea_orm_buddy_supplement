@@ -28,8 +28,8 @@ impl GaussianMouse {
         if stddev <= 0.0 {
             return 0.0;
         }
-        let u1 = rng.gen_range(f64::MIN_POSITIVE..1.0);
-        let u2 = rng.gen_range(0.0..1.0);
+        let u1 = rng.gen_range(1e-12_f64..1.0_f64);
+        let u2 = rng.gen_range(0.0_f64..1.0_f64);
         let z0 = (-2.0 * u1.ln()).sqrt() * (2.0 * std::f64::consts::PI * u2).cos();
         z0 * stddev
     }
@@ -165,7 +165,9 @@ impl GaussianMouse {
     pub fn generate_scroll_coordinates(start_y: i32, end_y: i32) -> Vec<(i32, i32)> {
         let mut movements =
             Self::generate_gaussian_mouse_movements(0, start_y, 0, end_y, GaussianConfig::default());
-        movements.push((0, end_y));
+        if movements.last().copied() != Some((0, end_y)) {
+            movements.push((0, end_y));
+        }
         movements
     }
 }
