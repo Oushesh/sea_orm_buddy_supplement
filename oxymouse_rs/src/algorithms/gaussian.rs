@@ -198,3 +198,7 @@ mod tests {
         assert_eq!(*coords.last().unwrap(), (0, 1000));
     }
 }
+
+
+//nice so here the tests are already in this script. move it under a seprate folder.
+

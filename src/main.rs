@@ -9,6 +9,7 @@ use fetcher::sitemap::{fetch_html,fetch_with_browser,fetch_stealth};
 use crawler::sitemap::parse_sitemap;
 use converter::sitemap::converter;
 use oxymouse_rs::algorithms::bezier_old::BezierMouse;
+use oxymouse_rs::algorithms::gaussian;
 
 #[tokio::main]
 async fn main () {
